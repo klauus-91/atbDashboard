@@ -11,6 +11,17 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
+  getZones(): Observable<any[]> {
+    const zones = [
+      'Grand Tunis',
+      'Cap bon',
+      'Centre',
+      'Sud',
+      'Nord'
+    ];
+
+    return of(zones);
+  }
   getBranch(): Observable<any> {
     const fakeBranches = [
       {
@@ -57,5 +68,13 @@ export class ApiService {
     ]
 
     return of(fakeATMs) ;
+  }
+  getTotalAmountChargedByYear(year: number): Observable<any> {
+    return of(620)
+  }
+
+  getYear(): Observable<number[]> {
+    const year = [2023, 2024, 2025]
+    return of(year);
   }
 }
