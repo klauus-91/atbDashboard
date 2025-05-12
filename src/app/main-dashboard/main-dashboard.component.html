@@ -1,0 +1,83 @@
+<div class="content form">
+  <app-filter></app-filter>
+
+  <div class="">
+    <div class="row g-3" >
+      <div class="col-xxl-9">
+        <div class="card rounded-3 overflow-hidden h-100">
+          <div class="card-body bg-line-chart-gradient d-flex flex-column justify-content-between">
+            <div class="row align-items-center g-0">
+              <div class="col" data-bs-theme="light">
+                <h4 class="text-white mb-0">Agency Repartition per Zone</h4>
+              </div>
+              <div class="col-auto d-none d-sm-block">
+                <select class="form-select form-select-sm mb-3" id="dashboard-chart-select">
+                  <option value="totalAmountCharged" selected="selected">Agency Repartition per Zone</option>
+                  <option value="totalAmountDistributed" >GAB Repartition per Zone</option>
+                  <option value="totalAmountDischarged">Gab per Agency</option>
+                </select>
+              </div>
+            </div>
+            <!--TODO: app chart here-->
+            <canvasjs-chart [options]="peiChartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row g-3 mb-3">
+      <div class="col-xxl-9">
+        <div class="card bg-body-tertiary dark__bg-opacity-50 my-3">
+
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-sm-6 col-md-4">
+            <div class="card overflow-hidden" style="min-width: 12rem;height: 100%">
+              <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-1.png);"></div><!--/.bg-holder-->
+              <div class="card-body position-relative">
+                <h6>Nomber of GAB</h6>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info" >169</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="card overflow-hidden" style="min-width: 12rem; height: 100%">
+              <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-2.png);"></div><!--/.bg-holder-->
+              <div class="card-body position-relative">
+                <h6>Nober of Branchs</h6>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif  text-warning" >131</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card overflow-hidden" style="min-width: 12rem;height: 100%">
+              <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-3.png);"></div><!--/.bg-holder-->
+              <div class="card-body position-relative">
+                <h6>Percentage</h6>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif" data-countup='{"endValue":17,"prefix":"%"}'>77.51%</div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row g-3" >
+      <div class="col-xxl-9">
+        <div class="card rounded-3 overflow-hidden h-100">
+          <div class="card-body bg-line-chart-gradient d-flex flex-column justify-content-between">
+            <div class="row align-items-center g-0">
+              <div class="col" data-bs-theme="light">
+                <h4 class="text-white mb-0">Comparison of the number of ATMs and bank branches by zone</h4>
+              </div>
+            </div>
+            <!--TODO: app chart here-->
+            <canvasjs-chart [options]="multiSeriesChartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
