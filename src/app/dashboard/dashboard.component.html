@@ -1,54 +1,6 @@
 <div class="content form">
-  <div class="col-xxl-9">
-    <div class="row g-0">
-      <div class="col-lg-6 pe-lg-2">
-        <label >Year</label>
-        <select class="form-select" [(ngModel)]="selectedYear" (change)="selectYear($event)" size="1">
-          <option value="0"> All</option>
-          <option *ngFor="let year of (year$ | async)" [value]="year">{{year}}</option>
 
-        </select>
-      </div>
-      <div class="col-lg-6 pe-lg-2">
-        <label >Month</label>
-        <select class="form-select" (change)="selectMonth($event)">
-          <option value="0"> All</option>
-          <option *ngFor="let month of allMonths" [value]="month">{{month}}</option>
-
-        </select>
-      </div>
-    </div>
-    <div class="row g-0">
-      <div class="col-lg-4 pe-lg-2">
-        <label >Select a zone</label>
-        <select class="form-select"  (change)="selectZone($event)" size="1">
-          <option value=""> All</option>
-          <option *ngFor="let zone of (zones$ | async)" [value]="zone">{{zone}}</option>
-
-        </select>
-      </div>
-      <div class="col-lg-4 pe-lg-2">
-        <label >Select a branch</label>
-        <select class="form-select" [(ngModel)]="selectedBranch"  size="1" [disabled]="!selectedZone">
-          <option value="0"> All</option>
-          <option *ngFor="let branches of (branches$ | async)" [value]="branches.braIden">{{branches.braCorpName}}</option>
-
-        </select>
-      </div>
-      <div class="col-lg-4 pe-lg-2" >
-        <label >Select a ATM</label>
-        <select class="form-select" [(ngModel)]="selectedAtm"  [disabled]="!selectedBranch">
-          <option value="0"> All</option>
-          <option *ngFor="let atm of (ATM$ | async)" [value]="atm.atmId">{{atm.atmLocation}}</option>
-
-        </select>
-      </div>
-
-    </div>
-  </div>
-  <div class="card bg-body-tertiary dark__bg-opacity-50 my-3">
-
-  </div>
+  <app-filter></app-filter>
   <div class="">
     <div class="row g-3" >
       <div class="col-xxl-9">
@@ -86,7 +38,7 @@
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-1.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
                 <h6>Total Amount Charged</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info" data-countup='{"endValue":58.386,"decimalPlaces":2,"suffix":"k"}'>2,26 Md</div>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info" data-countup='{"endValue":2,26,"decimalPlaces":2,"suffix":"Md"}'>2,26 Md</div>
                 <div class="fw-semi-bold fs-10 text-nowrap" href="../app/e-commerce/customers.html">Total Amount Distributed : 1,85 Md<span class="badge badge-subtle-info rounded-pill ms-2">81.85%</span></div>
               </div>
             </div>
@@ -96,7 +48,7 @@
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-2.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
                 <h6>Total Amount Discharged</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif  text-warning" data-countup='{"endValue":23.434,"decimalPlaces":2,"suffix":"k"}'>404.59 M</div><div class="fw-semi-bold fs-10 text-nowrap" href="../app/e-commerce/orders/order-list.html"></div>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif  text-warning" data-countup='{"endValue":404.59,"decimalPlaces":2,"suffix":"M"}'>404.59 M</div><div class="fw-semi-bold fs-10 text-nowrap" href="../app/e-commerce/orders/order-list.html"></div>
               </div>
             </div>
           </div>
@@ -105,7 +57,7 @@
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-3.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
                 <h6>Discharged Percentage</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif" data-countup='{"endValue":43594,"prefix":"$"}'>17%</div>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif" data-countup='{"endValue":17,"prefix":"%"}'>17%</div>
 
               </div>
             </div>

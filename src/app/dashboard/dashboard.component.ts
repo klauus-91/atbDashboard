@@ -1,22 +1,22 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ApiService} from '../services/api.service';
-import {Observable, Subscription} from 'rxjs';
-import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {Observable} from 'rxjs';
+import {AsyncPipe} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FooterComponent} from '../footer/footer.component';
-import {Chart, ChartConfiguration, registerables} from 'chart.js';
+import {Chart, registerables} from 'chart.js';
 import {CanvasJSAngularChartsModule} from '@canvasjs/angular-charts';
+import {FilterComponent} from '../filter/filter.component';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
-    NgForOf,
     AsyncPipe,
-    NgIf,
     ReactiveFormsModule,
     FooterComponent,
     FormsModule,
-    CanvasJSAngularChartsModule
+    CanvasJSAngularChartsModule,
+    FilterComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'

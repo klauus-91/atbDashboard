@@ -1,0 +1,48 @@
+<div class="col-xxl-9">
+  <div class="row g-0">
+    <div class="col-lg-6 pe-lg-2">
+      <label >Year</label>
+      <select class="form-select" [(ngModel)]="selectedYear" (change)="selectYear($event)" size="1">
+        <option value="0"> All</option>
+        <option *ngFor="let year of (year$ | async)" [value]="year">{{year}}</option>
+
+      </select>
+    </div>
+    <div class="col-lg-6 pe-lg-2">
+      <label >Month</label>
+      <select class="form-select" (change)="selectMonth($event)">
+        <option value="0"> All</option>
+        <option *ngFor="let month of allMonths" [value]="month">{{month}}</option>
+
+      </select>
+    </div>
+  </div>
+  <div class="row g-0">
+    <div class="col-lg-4 pe-lg-2">
+      <label >Select a zone</label>
+      <select class="form-select"  (change)="selectZone($event)" size="1">
+        <option value=""> All</option>
+        <option *ngFor="let zone of (zones$ | async)" [value]="zone">{{zone}}</option>
+
+      </select>
+    </div>
+    <div class="col-lg-4 pe-lg-2">
+      <label >Select a branch</label>
+      <select class="form-select" [ngModel]="selectedBranch"  (ngModelChange)="selectBranches($event)" size="1" [disabled]="!selectedZone">
+        <option value="0"> All</option>
+        <option *ngFor="let branches of (branches$ | async)" [value]="branches.braIden">{{branches.braCorpName}}</option>
+
+      </select>
+    </div>
+    <div class="col-lg-4 pe-lg-2" >
+      <label >Select a ATM</label>
+      <select class="form-select" [(ngModel)]="selectedAtm" (change)="selectAtm($event)"   [disabled]="!selectedBranch">
+        <option value="0"> All</option>
+        <option *ngFor="let atm of (ATM$ | async)" [value]="atm.atmId">{{atm.atmLocation}}</option>
+
+      </select>
+    </div>
+
+  </div>
+</div>
+<div class="card bg-body-tertiary dark__bg-opacity-50 my-3"></div>
