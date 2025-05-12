@@ -61,7 +61,7 @@ export class DashboardComponent implements  OnInit {
     width:1000,
     theme: "dark2",
     axisY: {
-      title: "Amount in DT"
+      title: "Amount in M"
     },
     toolTip: {
       content: "{label}: {y} DT"
