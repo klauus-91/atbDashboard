@@ -39,6 +39,9 @@ export class FilterComponent implements OnInit {
   ngOnInit() {
     this.branches$ = this.api.getBranch();
     this.year$ = this.api.getYear();
+    this.year$.subscribe(year => {
+      console.log(year);
+    })
     this.zones$ = this.api.getZones();
   }
   selectYear($event: Event) {

@@ -73,8 +73,8 @@ export class ApiService {
     return of(620)
   }
 
-  getYear(): Observable<number[]> {
-    const year = [2023, 2024, 2025]
-    return of(year);
+  getYear(): Observable<any> {
+    return this.http.get(this.apiUrl + '/year');
+
   }
 }
