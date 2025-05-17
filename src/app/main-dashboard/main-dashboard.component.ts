@@ -42,7 +42,7 @@ export class MainDashboardComponent {
       labelFontColor: "white"
     },
     axisY: {
-      title: "Nb Branch/ Nb GAB",
+      title: "Nb Branch/ Nb ATM",
       titleFontColor: "white",      // ✅ Set axis title color
       labelFontColor: "white"       // Optional: make axis tick labels white too
     },
@@ -63,8 +63,8 @@ export class MainDashboardComponent {
     },
     data: [{
       type: "column",
-      name: "Nomber Branchs",
-      legendText: "Nomber Branchs",
+      name: "Branch Number",
+      legendText: "Branch Number",
       showInLegend: true,
       indexLabelFontColor: "white",
       dataPoints:[
@@ -76,8 +76,8 @@ export class MainDashboardComponent {
       ]
     }, {
       type: "column",
-      name: "Nomber GAB",
-      legendText: "Nomber GAB",
+      name: "ATM Number",
+      legendText: "ATM Number",
 
       showInLegend: true,
       indexLabelFontColor: "white",

@@ -35,7 +35,7 @@
       </select>
     </div>
     <div class="col-lg-4 pe-lg-2" >
-      <label >Select a ATM</label>
+      <label >Select an ATM</label>
       <select class="form-select" [(ngModel)]="selectedAtm" (change)="selectAtm($event)"   [disabled]="!selectedBranch">
         <option value="0"> All</option>
         <option *ngFor="let atm of (ATM$ | async)" [value]="atm.atmId">{{atm.atmLocation}}</option>
