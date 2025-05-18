@@ -30,7 +30,7 @@
       <label >Select a branch</label>
       <select class="form-select" [ngModel]="selectedBranch"  (ngModelChange)="selectBranches($event)" size="1" [disabled]="!selectedZone">
         <option value="0"> All</option>
-        <option *ngFor="let branches of (branches$ | async)" [value]="branches.braIden">{{branches.braCorpName}}</option>
+        <option *ngFor="let branches of (branches$ | async)" [value]="branches.braCode">{{branches.braCorpName}}</option>
 
       </select>
     </div>

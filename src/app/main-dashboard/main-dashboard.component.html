@@ -1,6 +1,4 @@
 <div class="content form">
-  <app-filter></app-filter>
-
   <div class="">
     <div class="row g-3" >
       <div class="col-xxl-9">
@@ -8,18 +6,18 @@
           <div class="card-body bg-line-chart-gradient d-flex flex-column justify-content-between">
             <div class="row align-items-center g-0">
               <div class="col" data-bs-theme="light">
-                <h4 class="text-white mb-0">Agency Repartition per Zone</h4>
+                <h4 class="text-white mb-0">{{pieChartSelectedOption}}</h4>
               </div>
               <div class="col-auto d-none d-sm-block">
-                <select class="form-select form-select-sm mb-3" id="dashboard-chart-select">
-                  <option value="totalAmountCharged" selected="selected">Agency Repartition per Zone</option>
-                  <option value="totalAmountDistributed" >ATM Repartition per Zone</option>
-                  <option value="totalAmountDischarged">ATM per Agency</option>
+                <select class="form-select" [(ngModel)]="pieChartSelectedOption" (change)="selectPieChartOption()">
+                  <option value="agencyPerZone" selected="selected">Agency Repartition per Zone</option>
+                  <option value="atmPerZone" >ATM Repartition per Zone</option>              
                 </select>
               </div>
             </div>
             <!--TODO: app chart here-->
-            <canvasjs-chart [options]="peiChartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+            <canvasjs-chart  [style.display]="showPieChart1 ? 'block' : 'none'"    [options]="pieChartZonePerBranch" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+            <canvasjs-chart  [style.display]="showPieChart2 ? 'block' : 'none'"    [options]="pieChartZonePerATM" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
           </div>
         </div>
       </div>
@@ -36,7 +34,7 @@
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-1.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
                 <h6>Number of ATMs</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info" >169</div>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info" >{{(numberOfATMs$ | async)}}</div>
               </div>
             </div>
           </div>
@@ -45,7 +43,7 @@
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-2.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
                 <h6>Number of Branches</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif  text-warning" >131</div>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif  text-warning" >{{numberOfBranches$ | async}}</div>
               </div>
             </div>
           </div>
@@ -54,7 +52,7 @@
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-3.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
                 <h6>Percentage</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif" data-countup='{"endValue":17,"prefix":"%"}'>77.51%</div>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif" data-countup='{"endValue":17,"decimalPlaces":2",prefix":"%"}'>{{( (numberOfATMs$ | async) / (numberOfBranches$ | async)) | number:'1.2-2'}}%</div>
 
               </div>
             </div>

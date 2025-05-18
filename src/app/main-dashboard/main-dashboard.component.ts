@@ -1,93 +1,229 @@
-import { Component } from '@angular/core';
-import {AsyncPipe, NgForOf} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {AsyncPipe, CommonModule, NgForOf} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FilterComponent} from '../filter/filter.component';
 import {CanvasJSAngularChartsModule} from '@canvasjs/angular-charts';
+import { Observable } from 'rxjs';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-main-dashboard',
   imports: [
     ReactiveFormsModule,
-    FilterComponent,
-    CanvasJSAngularChartsModule
+    CanvasJSAngularChartsModule,
+    FormsModule,
+    CommonModule
   ],
   templateUrl: './main-dashboard.component.html',
   styleUrl: './main-dashboard.component.scss'
 })
-export class MainDashboardComponent {
+export class MainDashboardComponent implements OnInit {
 
-  peiChartOptions = {
-    animationEnabled: true,
-    backgroundColor: 'transparent',
-    exportEnabled: true,
-    data: [{
-      type: "pie", //change type to column, line, area, doughnut, etc
-      indexLabel: "{name}: {y}%",
-      indexLabelFontColor: "white",
-      dataPoints: [
-        { name: "Grand Tunis", y: 43.51 },
-        { name: "Sud", y: 23.66 },
-        { name: "Nord", y: 19.08 },
-        { name: "Center", y: 13.74 },
-        { name: "Cap Bon", y: 20.1 }
-      ]
-    }]
+  @ViewChild('pieChart', { static: false }) pieChartComponent: any;
+  pieChartSelectedOption: string = 'agencyPerZone';
+  x: string = 'zone';
+  y: string = 'numberOfBranches';
+  pieChartData$!: Observable<any[]>;
+  pieChartZonePerBranch: any;
+  pieChartZonePerATM: any;
+  showPieChart1 = true;
+  showPieChart2 = false;
+
+  numberOfBranches$!: Observable<any>;
+  numberOfATMs$!: Observable<any>;
+
+  multiSeriesChartOptions: any;
+  constructor(private apiService: ApiService, private cdr: ChangeDetectorRef) {
+  
+   }
+  ngOnInit() {
+   this.initiateChart1(); 
+   this.initiateChart2();
+   this.numberOfBranches$ = this.apiService.getNumberOfBranchs('');
+   this.numberOfATMs$ = this.apiService.getNumberOfATMs('');
+   this.multiSeriesChartData();
+   
+  }
+  ngAfterViewInit() {
+    setTimeout(() => { this.updatePieChart()},0);
+  
+  }
+  initiateChart1() {
+    let dataPoints = [];
+    this.apiService.getGeneralViewPieChartData('zone', 'numberOfBranches').subscribe((data) => {
+      const keys = Object.keys(data);
+      const values = Object.values(data) as number[];
+  
+      for (let i = 0; i < keys.length; i++) {
+        dataPoints.push({ name: keys[i], y: values[i] });
+      }
+      this.pieChartZonePerBranch = {
+        animationEnabled: true,
+        backgroundColor: 'transparent',
+        exportEnabled: true,
+        data: [{
+          type: "pie",
+          indexLabel: "{name}: {y}%",
+          indexLabelFontColor: "white",
+          dataPoints: dataPoints
+        }]
+      };
+    });
+  }
+  initiateChart2() {
+    let dataPoints = [];
+    this.apiService.getGeneralViewPieChartData('zone', 'numberOfATMs').subscribe((data) => {
+      const keys = Object.keys(data);
+      const values = Object.values(data) as number[];
+  
+      for (let i = 0; i < keys.length; i++) {
+        dataPoints.push({ name: keys[i], y: values[i] });
+      }
+      this.pieChartZonePerATM = {
+        animationEnabled: true,
+        backgroundColor: 'transparent',
+        exportEnabled: true,
+        data: [{
+          type: "pie",
+          indexLabel: "{name}: {y}%",
+          indexLabelFontColor: "white",
+          dataPoints: dataPoints
+        }]
+      };
+    });
+  }
+  updatePieChart() {
+
+  let dataPoints = [];
+
+  if (this.y == 'numberOfBranches') {
+    this.showPieChart1 = true;
+    this.showPieChart2 = false;
+    this.apiService.getGeneralViewPieChartData(this.x, this.y).subscribe((data) => {
+      const keys = Object.keys(data);
+      const values = Object.values(data) as number[];
+  
+      for (let i = 0; i < keys.length; i++) {
+        dataPoints.push({ name: keys[i], y: values[i] });
+      }
+      this.pieChartZonePerBranch = {
+        animationEnabled: true,
+        backgroundColor: 'transparent',
+        exportEnabled: true,
+        data: [{
+          type: "pie",
+          indexLabel: "{name}: {y}%",
+          indexLabelFontColor: "white",
+          dataPoints: dataPoints
+        }]
+      };
+    });
+  }
+  if (this.y == 'numberOfATMs') {
+    this.showPieChart1 = false;
+    this.showPieChart2 = true;
+
+    this.apiService.getGeneralViewPieChartData(this.x, this.y).subscribe((data) => {
+      const keys = Object.keys(data);
+      const values = Object.values(data) as number[];
+  
+      for (let i = 0; i < keys.length; i++) {
+        dataPoints.push({ name: keys[i], y: values[i] });
+      }
+  
+      this.pieChartZonePerATM = {
+        animationEnabled: true,
+        backgroundColor: 'transparent',
+        exportEnabled: true,
+        data: [{
+          type: "pie",
+          indexLabel: "{name}: {y}%",
+          indexLabelFontColor: "white",
+          dataPoints: dataPoints
+        }]
+      };
+
+    });
   }
 
-  multiSeriesChartOptions = {
-    animationEnabled: true,
-    backgroundColor: 'transparent',
-    axisX: {
-      labelAngle: -90,
-      labelFontColor: "white"
-    },
-    axisY: {
-      title: "Nb Branch/ Nb ATM",
-      titleFontColor: "white",      // ✅ Set axis title color
-      labelFontColor: "white"       // Optional: make axis tick labels white too
-    },
-    toolTip: {
-      shared: true
-    },
-    legend:{
-      cursor:"pointer",
-      itemclick: function(e: any){
-        if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-          e.dataSeries.visible = false;
-        }
-        else {
-          e.dataSeries.visible = true;
-        }
-        e.chart.render();
-      }
-    },
-    data: [{
-      type: "column",
-      name: "Branch Number",
-      legendText: "Branch Number",
-      showInLegend: true,
-      indexLabelFontColor: "white",
-      dataPoints:[
-        {label: "Grand Tunis", y: 56},
-        {label: "Sud", y: 42},
-        {label: "Nord", y: 29},
-        {label: "Center", y: 23},
-        {label: "Cap Bon", y: 11},
-      ]
-    }, {
-      type: "column",
-      name: "ATM Number",
-      legendText: "ATM Number",
+  }
+  selectPieChartOption() {
+    console.log(this.pieChartSelectedOption);
+    if (this.pieChartSelectedOption == 'agencyPerZone') {
+      this.x = 'zone';
+      this.y = 'numberOfBranches';
+    }
+    if (this.pieChartSelectedOption == 'atmPerZone') {
+      this.x = 'zone';
+      this.y = 'numberOfATMs';
+    }
+     
+    setTimeout(() => { this.updatePieChart()},0);
 
-      showInLegend: true,
-      indexLabelFontColor: "white",
-      dataPoints:[
-        {label: "Grand Tunis", y: 82},
-        {label: "Sud", y: 47},
-        {label: "Nord", y: 29},
-        {label: "Center", y: 23},
-        {label: "Cap Bon", y: 11},
-      ]
-    }]
+  }
+
+  multiSeriesChartData() {
+    let data1: any = [];
+    let data2: any = [];
+    let zones = ['Grand Tunis', 'Cap Bon', 'Centre', 'Sud', 'Nord'];
+    zones.forEach((zone) => {
+      let serie1 = this.apiService.getNumberOfBranchs(zone);
+      let serie2 = this.apiService.getNumberOfATMs(zone);
+      serie1.subscribe((data) => {
+        data1.push({ label: zone, y: data });
+      });
+      serie2.subscribe((data) => {
+        data2.push({ label: zone, y: data });
+      });
+
+    })
+    console.log(data1);
+    console.log(data2);
+    
+    this.multiSeriesChartOptions = {
+      animationEnabled: true,
+      backgroundColor: 'transparent',
+      axisX: {
+        labelAngle: -90,
+        labelFontColor: "white"
+      },
+      axisY: {
+        title: "Nb Branch/ Nb ATM",
+        titleFontColor: "white",      // ✅ Set axis title color
+        labelFontColor: "white"       // Optional: make axis tick labels white too
+      },
+      toolTip: {
+        shared: true
+      },
+      legend:{
+        cursor:"pointer",
+        itemclick: function(e: any){
+          if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
+          }
+          else {
+            e.dataSeries.visible = true;
+          }
+          e.chart.render();
+        }
+      },
+      data: [{
+        type: "column",
+        name: "Branch Number",
+        legendText: "Branch Number",
+        showInLegend: true,
+        indexLabelFontColor: "white",
+        dataPoints:data1
+      }, {
+        type: "column",
+        name: "ATM Number",
+        legendText: "ATM Number",
+  
+        showInLegend: true,
+        indexLabelFontColor: "white",
+        dataPoints:data2
+      }]
+    }
+
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import {map, Observable, of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class ApiService {
   getZones(): Observable<any[]> {
     const zones = [
       'Grand Tunis',
-      'Cap bon',
+      'Cap Bon',
       'Centre',
       'Sud',
       'Nord'
@@ -22,59 +22,39 @@ export class ApiService {
 
     return of(zones);
   }
-  getBranch(): Observable<any> {
-    const fakeBranches = [
-      {
-        "braCode": 22841,
-        "braIden": 101,
-        "braCorpName": "KEBILI"
-      },
-      {
-        "braCode": 22861,
-        "braIden": 102,
-        "braCorpName": "MEDENINE"
-      },
-      {
-        "braCode": 24041,
-        "braIden": 104,
-        "braCorpName": "BEN AROUS"
-      },
-      {
-        "braCode": 29641,
-        "braIden": 127,
-        "braCorpName": "SOUSSE RIADH"
-      },
-      {
-        "braCode": 30041,
-        "braIden": 128,
-        "braCorpName": "HAMMAM SOUSSE"
-      },
-    ]
-    return of(fakeBranches);
-   /* return this.http.get(this.apiUrl + '/api/branches');*/
+  getBranch(zone: string): Observable<any> {
+    return this.http.get(this.apiUrl + '/zone_branch/?zone=' + zone);
+  
   }
   getATMs(branchId: number): Observable<any> {
-    const fakeATMs = [
-      {
-        "atmId": 1052080,
-        "atmLocation": "ATB AGENCE LAC 2",
-        "branch": 40041
-      },
-      {
-        "atmId": 1052900,
-        "atmLocation": "ATB AGENCE LAC 2 MS",
-        "branch": 40041
-      }
-    ]
+    return this.http.get(this.apiUrl + '/atms/?braCode=' + branchId);
 
-    return of(fakeATMs) ;
   }
   getTotalAmountChargedByYear(year: number): Observable<any> {
     return of(620)
   }
 
   getYear(): Observable<any> {
-    return this.http.get(this.apiUrl + '/year');
+    return this.http.get<{ years: number[] }>(this.apiUrl + '/year/').pipe(
+      map(response => response.years)
+    );
 
+  }
+
+  getGeneralViewPieChartData(x: string, y: string): Observable<any> {
+    return this.http.get(this.apiUrl + '/generalchartfilter/?x=' + x + '&y=' + y);
+  }
+
+  getNumberOfBranchs(zone: string): Observable<any> {
+    return this.http.get<{ numberOfBranches: number }>(this.apiUrl + '/numberOfBranches/?zone=' + zone).pipe(
+      map(response => response.numberOfBranches)
+    );
+  
+  }
+  getNumberOfATMs(zone: string): Observable<any> {
+    return this.http.get<{ numberOfATMs: number }>(this.apiUrl + '/numberOfATMs/?zone=' + zone).pipe(
+      map(response => response.numberOfATMs)
+    );
+  
   }
 }

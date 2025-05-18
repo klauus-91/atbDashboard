@@ -21,8 +21,7 @@ export class FilterComponent implements OnInit {
   year$!: Observable<number[]>;
   zones$!: Observable<any[]>;
 
-
-  selectedYear: number = new Date().getFullYear();
+  selectedYear = 0;
   selectedMonth: number = 0;
   allMonths: number[] = [
     1,2,3,4,5,6,7,8,9,10,11,12
@@ -37,16 +36,12 @@ export class FilterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.branches$ = this.api.getBranch();
+    this.branches$ = this.api.getBranch('');
     this.year$ = this.api.getYear();
-    this.year$.subscribe(year => {
-      console.log(year);
-    })
     this.zones$ = this.api.getZones();
   }
   selectYear($event: Event) {
-    this.selectedYear =  +($event.target as HTMLSelectElement).value;
-    console.log(this.selectedYear);
+    this.selectedYear =  +($event.target as HTMLSelectElement).value
   }
 
   selectMonth($event: Event) {
@@ -56,12 +51,11 @@ export class FilterComponent implements OnInit {
   selectZone($event: Event) {
     this.selectedZone = ($event.target as HTMLSelectElement).value;
     if (!this.selectedZone) this.selectedBranch = 0; this.selectedAtm = 0;
-    console.log(this.selectedZone);
+    this.branches$ = this.api.getBranch(this.selectedZone);
   }
   selectBranches($event: Event) {
     this.selectedBranch = +$event;
-    console.log(this.selectedBranch);
-    this.ATM$ = this.api.getATMs(this.selectedAtm);
+    this.ATM$ = this.api.getATMs(this.selectedBranch);
   }
 
   selectAtm($event: Event) {

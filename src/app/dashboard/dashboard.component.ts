@@ -83,9 +83,8 @@ export class DashboardComponent implements  OnInit {
   }
 
   ngOnInit() {
-    this.branches$ = this.api.getBranch();
-    this.year$ = this.api.getYear();
-    this.zones$ = this.api.getZones();
+  
+
     this.totalAmountCharged$ = this.api.getTotalAmountChargedByYear(2025);
   }
 
