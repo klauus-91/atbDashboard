@@ -6,7 +6,7 @@
           <div class="card-body bg-line-chart-gradient d-flex flex-column justify-content-between">
             <div class="row align-items-center g-0">
               <div class="col" data-bs-theme="light">
-                <h4 class="text-white mb-0">{{pieChartSelectedOption}}</h4>
+                <h4 class="text-white ">{{pieChartSelectedOption | prettyLabel }}</h4>
               </div>
               <div class="col-auto d-none d-sm-block">
                 <select class="form-select" [(ngModel)]="pieChartSelectedOption" (change)="selectPieChartOption()">

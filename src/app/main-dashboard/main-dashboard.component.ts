@@ -5,14 +5,17 @@ import {FilterComponent} from '../filter/filter.component';
 import {CanvasJSAngularChartsModule} from '@canvasjs/angular-charts';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services/api.service';
+import { PrettyLabelPipe } from '../pipes/pretty-label.pipe';
 
 @Component({
   selector: 'app-main-dashboard',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     CanvasJSAngularChartsModule,
     FormsModule,
-    CommonModule
+    CommonModule,
+    PrettyLabelPipe
   ],
   templateUrl: './main-dashboard.component.html',
   styleUrl: './main-dashboard.component.scss'
@@ -63,7 +66,7 @@ export class MainDashboardComponent implements OnInit {
         exportEnabled: true,
         data: [{
           type: "pie",
-          indexLabel: "{name}: {y}%",
+          indexLabel: "{name}: {y}",
           indexLabelFontColor: "white",
           dataPoints: dataPoints
         }]
@@ -85,7 +88,7 @@ export class MainDashboardComponent implements OnInit {
         exportEnabled: true,
         data: [{
           type: "pie",
-          indexLabel: "{name}: {y}%",
+          indexLabel: "{name}: {y}",
           indexLabelFontColor: "white",
           dataPoints: dataPoints
         }]
@@ -112,7 +115,7 @@ export class MainDashboardComponent implements OnInit {
         exportEnabled: true,
         data: [{
           type: "pie",
-          indexLabel: "{name}: {y}%",
+          indexLabel: "{name}: {y}",
           indexLabelFontColor: "white",
           dataPoints: dataPoints
         }]
@@ -137,7 +140,7 @@ export class MainDashboardComponent implements OnInit {
         exportEnabled: true,
         data: [{
           type: "pie",
-          indexLabel: "{name}: {y}%",
+          indexLabel: "{name}: {y}",
           indexLabelFontColor: "white",
           dataPoints: dataPoints
         }]
