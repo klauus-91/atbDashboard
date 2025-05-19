@@ -1,0 +1,101 @@
+<div class="content">
+
+<div class="card mb-3">
+  <div class="card-header">
+    <h5>Search an ATM ID</h5>
+  </div>
+  <div class="card-body bg-body-tertiary">
+    <div class="row g-3 needs-validation" novalidate="">
+      <div class="col-md-4"><label class="form-label" for="validationCustom01">ATM ID</label>
+        <input [(ngModel)]="atmID" [value]="atmID" class="form-control" type="number" required="" />
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary" (click)="searchATM()">Submit form</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="" *ngIf="displayPage">
+  <div class="d-flex mb-4 mt-3">
+    <div class="col">
+      <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">ATB CONFIGURATION WINCOR MTIP-EMV 3 K7 10-20-50 WALETT (1005680)</span>
+        <span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-n1"></span>
+      </h5>
+      <p class="mb-0">ATB AGENCE CENTRALE INTERNE (Grand Tunis).</p>
+    </div>
+  </div>
+  <div class="row g-3 mb-">
+    <div class="col-md-6 col-xxl-4">
+      <div class="card h-md-100 ecommerce-card-min-width">
+        <div class="card-header pb-0">
+          <h6 class="mb-0 mt-2 d-flex align-items-center">Last charge date:</h6>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-end">
+          <div class="row">
+            <div class="col">
+              <p class="font-sans-serif lh-3 mb-2 fs-8">19/09/2024</p>
+              <h6 class="mb-0 mt-2 d-flex align-items-center">Amount Charged:</h6><br/>
+              <p class="badge badge-subtle-success rounded-pill fs-5 mb-1">6000 dt</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xxl-4">
+      <div class="card h-md-100">
+        <div class="card-header pb-0">
+          <h6 class="mb-0 mt-2">Last decharge date:</h6>
+        </div>
+        <div class="card-body d-flex flex-column justify-content-end">
+          <div class="row">
+            <div class="col">
+              <p class="font-sans-serif lh-1 mb-1 fs-8">25/09/2024</p>
+              <h6 class="mb-0 mt-2 d-flex align-items-center">Amount Decharged:</h6><br/>
+              <p class="fs-5 badge badge-subtle-danger rounded-pill">500 dt</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xxl-4">
+      <div class="card h-md-100">
+        <div class="card-body">
+          <div class="row h-100 justify-content-between g-0">
+            <div class="col-5 col-sm-6 col-xxl pe-2">
+              <h6 class="mt-1">Total amount distributed:</h6>
+              <br/>
+              <br/>
+              <br/>
+              <p class="badge badge-subtle-warning rounded-pill fs-5">5500 dt</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+  </div>
+  <br/>
+  <div class="row g-3 mb-3">
+    <div class="col-lg-12">
+      <div class="card h-100">
+        <div class="card-header">
+          <div class="row flex-between-end">
+            <div class="col-auto align-self-center">
+              <h5 class="mb-0" data-anchor="data-anchor">AI Suggestion:</h5>
+            </div>
+
+          </div>
+        </div>
+        <div class="card-body bg-body-tertiary">
+          <h5> Needs to charged at: <span class="fs-8 fw-normal font-sans-serif text-primary mb-1 lh-1">29/09/2024</span></h5>
+          <div class="fs-5 fw-normal font-sans-serif text-700 lh-1 mb-1">5500 dt <span class="badge badge-subtle-success rounded-pill fs-7">+/- 200 dt</span> </div>
+          <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
