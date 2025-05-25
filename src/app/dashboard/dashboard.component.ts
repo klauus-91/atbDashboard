@@ -1,12 +1,13 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ApiService} from '../services/api.service';
-import {Observable} from 'rxjs';
-import {AsyncPipe} from '@angular/common';
+import {BehaviorSubject, Observable, Subscription, combineLatest, switchMap} from 'rxjs';
+import {AsyncPipe, CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FooterComponent} from '../footer/footer.component';
 import {Chart, registerables} from 'chart.js';
 import {CanvasJSAngularChartsModule} from '@canvasjs/angular-charts';
 import {FilterComponent} from '../filter/filter.component';
+import { PrettyLabelPipe } from '../pipes/pretty-label.pipe';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,12 +17,14 @@ import {FilterComponent} from '../filter/filter.component';
     FooterComponent,
     FormsModule,
     CanvasJSAngularChartsModule,
-    FilterComponent
+    FilterComponent,
+    PrettyLabelPipe,
+    CommonModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements  OnInit {
+export class DashboardComponent implements  OnInit, OnDestroy {
 
   @ViewChild('totalAmountCharged') canvasRef!: ElementRef;
   chart: Chart | undefined;
@@ -34,8 +37,11 @@ export class DashboardComponent implements  OnInit {
   zones$!: Observable<any[]>;
 
 
-  selectedYear: number = new Date().getFullYear();
-  selectedMonth: number = 0;
+  selectedYear$ = new BehaviorSubject<number>(0);
+  selectedMonth$ = new BehaviorSubject<number>(0);
+  chartType$ = new BehaviorSubject<string>('totalAmountCharged');
+  topAgency$!: Observable<any>;
+
   allMonths: number[] = [
     1,2,3,4,5,6,7,8,9,10,11,12
   ];
@@ -43,13 +49,16 @@ export class DashboardComponent implements  OnInit {
   selectedBranch: number = 0;
   selectedAtm: number = 0;
   selectedDate!: string;
-  totalAmountCharged$!: Observable<number>;
+  totalAmounts$!: Observable<any>;
+  topAgencyFilter: string = 'totalAmountCharged'; // Default filter type for top agency chart
+
   config = {
     diplayATMSelect: false,
     displayDashboard: false,
   }
 
-
+  chartType: string = 'totalAmountCharged'; // Default chart type
+  getChartDataSub$ = new Subscription();
 
   /* charts **/
 
@@ -84,49 +93,107 @@ export class DashboardComponent implements  OnInit {
 
   ngOnInit() {
   
-
-    this.totalAmountCharged$ = this.api.getTotalAmountChargedByYear(2025);
+   
+    this.getDashboardData();
+  }
+  onSelectionChanged(event: any) {
+    this.selectedYear$.next(event.year);
+    this.selectedMonth$.next(event.month);
+    this.selectedZone = event.zone;
+    this.selectedBranch = event.branch;
+    this.selectedAtm = event.atm;
+    
+    
+   this.getDashboardData();
+    
   }
 
-  getMonths(count: number): string[] {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return months.slice(0, count);
+  chartTypeChanged(event: any) {
+    console.log('Chart type changed:', this.chartType);
+    this.chartType$.next(this.chartType);
+    this.getDashboardData();
   }
-  selectBranches($event: Event) {
-    console.log(($event.target as HTMLSelectElement).value);
-    this.selectedBranch = +($event.target as HTMLSelectElement).value;
-    this.ATM$ = this.api.getATMs(this.selectedAtm);
-    this.config.diplayATMSelect = true;
+  getDashboardData() {
+    this.getChartData();
+    this.getAmountsData();
+    this.getTopAgency();
 
   }
 
-  selelctAtm($event: Event) {
-    this.selectedAtm = +($event.target as HTMLSelectElement).value;
-    this.config.displayDashboard = true;
+  getTopAgency() {
+    const inputs = {
+      year: this.selectedYear$.value,
+      month: this.selectedMonth$.value,
+      value: this.topAgencyFilter
+    };
+    this.topAgency$ = this.api.topAgencies(inputs);
+  }
+  getAmountsData() {
+    const inputs = {
+      year: this.selectedYear$.value,
+      month: this.selectedMonth$.value,
+      zone: this.selectedZone,
+      branchId: this.selectedBranch,
+      atmId: this.selectedAtm,
+    
+    }
+  
+    this.totalAmounts$ = this.api.getTotalAmountCharged(inputs);
+    this.totalAmounts$.subscribe(amount => {console.log('Total Amount Charged:', amount);});    
   }
 
-  dateChange() {
-    const [year, month, day] = this.selectedDate.split('-');
-    const formattedDate = `${day}-${month}-${year}`;
-
-    console.log('Selected date:', formattedDate);
+  topAgencyFilterChanged(event: any) {
+    console.log(this.topAgencyFilter)
+    this.getTopAgency();
+  }
+  getChartData() {
+    this.getChartDataSub$ =  combineLatest([
+      this.selectedYear$,
+      this.selectedMonth$,
+      this.chartType$
+    ])
+    .pipe(
+      switchMap(([year, month, chartType]) => {
+        const inputs = { year, month, chartType };
+        return this.api.getLiquidityChartData(inputs);
+      })
+    )
+    .subscribe(chartData => {
+      const dataPoints = Object.entries(chartData).map(([label, value]) => ({
+        label,
+        y: value
+      }));
+  
+      
+      (this.chartOptions as any) = {
+        animationEnabled: true,
+        animationDuration: 1000, // Optional: 1 second animation
+        title: { text: "" },
+        backgroundColor: '#0b1727',
+        width: 1000,
+        theme: "dark2",
+        axisY: {
+          title: "Amount in M",
+          labelFormatter: function (e: any) {
+            return Math.round(e.value / 1_000).toLocaleString() + " M";
+          }
+        },
+        toolTip: {
+          contentFormatter: function (e: any) {
+            const label = e.entries[0].dataPoint.label;
+            const valueInMillions = Math.round(e.entries[0].dataPoint.y / 1_000).toLocaleString();
+            return `${label}: ${valueInMillions} M `;
+          }
+        },
+        data: [{
+          type: "column",
+          dataPoints
+        }]
+      };
+    });
   }
 
-  selectYear($event: Event) {
-    this.selectedYear =  +($event.target as HTMLSelectElement).value;
-    console.log(this.selectedYear);
-  }
-
-  selectMonth($event: Event) {
-    this.selectedMonth =  +($event.target as HTMLSelectElement).value;
-  }
-
-  selectZone($event: Event) {
-    this.selectedZone = ($event.target as HTMLSelectElement).value;
-    if (!this.selectedZone) this.selectedBranch = 0; this.selectedAtm = 0;
-    console.log(this.selectedZone);
+  ngOnDestroy(): void {
+    this.getChartDataSub$.unsubscribe();
   }
 }

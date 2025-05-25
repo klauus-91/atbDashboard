@@ -30,8 +30,16 @@ export class ApiService {
     return this.http.get(this.apiUrl + '/atms/?braCode=' + branchId);
 
   }
-  getTotalAmountChargedByYear(year: number): Observable<any> {
-    return of(620)
+  getTotalAmountCharged(inputs: any): Observable<any> {
+    const { year, month, zone, branchId, atmId  } = inputs;
+    
+    const monthParam = month && month !== '00' ? month : ''; // Ensure month is '00' if not provided
+    const yearParam = year && year !== 0 ? year : '';
+    const branchParam = branchId && branchId !== 0 ? branchId : '';
+    const atmParam = atmId && atmId !== 0 ? atmId : '';
+    const zoneParam = zone && zone !== '' ? zone : '';
+    console.log( '/totalAmounts/?year=' + yearParam + '&month=' + monthParam + '&zone=' + zoneParam + '&branch=' + branchParam + '&atm=' + atmParam);
+    return this.http.get(this.apiUrl + '/totalAmounts/?year=' + yearParam + '&month=' + monthParam + '&zone=' + zoneParam + '&branch=' + branchParam + '&atm=' + atmParam);
   }
 
   getYear(): Observable<any> {
@@ -56,5 +64,21 @@ export class ApiService {
       map(response => response.numberOfATMs)
     );
   
+  }
+  getLiquidityChartData(inputs: any): Observable<any> {
+    const { year, month, chartType } = inputs;
+  
+    const yearParam = year && year !== 0 ? year : '';
+
+    return this.http.get(this.apiUrl + '/barchartfilter/?year=' + yearParam + '&month=' + month + '&x=zone' + '&y=' + chartType);
+  }
+
+  topAgencies(inputs: any): Observable<any> {
+    const {year, month, value} = inputs;
+    const monthParam = month && month !== '00' ? month : ''; 
+    const yearParam = year && year !== 0 ? year : '';
+   
+    return this.http.get(this.apiUrl + '/top5Agencies/?year=' + yearParam + '&month=' + monthParam + '&value=' + value);
+
   }
 }

@@ -1,6 +1,8 @@
 <div class="content form">
 
-  <app-filter></app-filter>
+  <app-filter
+  (selectionChanged)="onSelectionChanged($event)"
+  ></app-filter>
   <div class="">
     <div class="row g-3" >
       <div class="col-xxl-9">
@@ -8,14 +10,14 @@
           <div class="card-body bg-line-chart-gradient d-flex flex-column justify-content-between">
             <div class="row align-items-center g-0">
               <div class="col" data-bs-theme="light">
-                <h4 class="text-white mb-0">Amount charged: {{totalAmountCharged$ | async}} M</h4>
+                <h4 class="text-white">{{chartType | prettyLabel}}</h4>
               </div>
               <div class="col-auto d-none d-sm-block">
-                  <select class="form-select form-select-sm mb-3" id="dashboard-chart-select">
-                    <option value="totalAmountCharged">Total Amount Charged</option>
-                    <option value="totalAmountDistributed" selected="selected">Total Amount Distributed</option>
-                    <option value="totalAmountDischarged">Total Amount Decharged</option>
-                    <option value="dischargedPercentage">Decharged Percentage</option>
+                  <select class="form-select form-select-sm mb-3" [(ngModel)]="chartType" (change)="chartTypeChanged($event)" id="dashboard-chart-select">
+                    <option value="totalAmountCharged" selected="selected">Total Amount Charged</option>
+                    <option value="totalAmountDistributed" >Total Amount Distributed</option>
+                    <option value="totalAmountDecharged">Total Amount Decharged</option>
+                  
                   </select>
               </div>
             </div>
@@ -37,8 +39,7 @@
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-1.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
                 <h6>Total Amount Charged</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info" data-countup='{"endValue":2260,"decimalPlaces":2,"suffix":"M"}'>2260 M</div>
-                <div class="fw-semi-bold fs-10 text-nowrap" href="../app/e-commerce/customers.html">Total Amount Distributed : 1,85 Md<span class="badge badge-subtle-info rounded-pill ms-2">81.85%</span></div>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif text-info" data-countup='{"endValue":2260,"decimalPlaces":2,"suffix":"M"}'>{{((totalAmounts$ | async)?.totalAmountCharged  / 1000000) | number:'1.0-0' }} M</div>
               </div>
             </div>
           </div>
@@ -46,8 +47,8 @@
             <div class="card overflow-hidden" style="min-width: 12rem; height: 100%">
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-2.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
-                <h6>Total Amount Decharged</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif  text-warning" data-countup='{"endValue":404.59,"decimalPlaces":2,"suffix":"M"}'>404.59 M</div><div class="fw-semi-bold fs-10 text-nowrap" href="../app/e-commerce/orders/order-list.html"></div>
+                <h6>Total Amount Distributed</h6>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif  text-warning" >{{((totalAmounts$ | async)?.totalAmountDistributed / 1000000) | number:'1.0-0'  }} M</div><div class="fw-semi-bold fs-10 text-nowrap" href="../app/e-commerce/orders/order-list.html"></div>
               </div>
             </div>
           </div>
@@ -56,7 +57,7 @@
               <div class="bg-holder bg-card" style="background-image:url(../assets/img/icons/spot-illustrations/corner-3.png);"></div><!--/.bg-holder-->
               <div class="card-body position-relative">
                 <h6>Decharged Percentage</h6>
-                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif" data-countup='{"endValue":17,"prefix":"%"}'>17%</div>
+                <div class="display-4 fs-5 mb-2 fw-normal font-sans-serif" data-countup='{"endValue":17,"prefix":"%"}'>{{(((totalAmounts$ | async)?.totalAmountDistributed / (totalAmounts$ | async)?.totalAmountCharged ) * 100) |  number:'1.2-2' }}%</div>
 
               </div>
             </div>
@@ -71,11 +72,11 @@
                     <h6 class="mb-2">Top 5 Agencies (Total Charged Amount)</h6>
                   </div>
                   <div class="col-auto d-none d-sm-block">
-                    <select class="form-select form-select-sm mb-3" id="dashboard-chart-select">
-                      <option value="totalAmountCharged">Total Amount Charged</option>
-                      <option value="totalAmountDistributed" selected="selected">Total Amount Distributed</option>
-                      <option value="totalAmountDischarged">Total Amount Decharged</option>
-                      <option value="dischargedPercentage">Decharged Percentage</option>
+                    <select class="form-select form-select-sm mb-3" [(ngModel)]="topAgencyFilter" (change)="topAgencyFilterChanged($event)" id="dashboard-chart-select">
+                      <option value="totalAmountCharged" selected="selected">Total Amount Charged</option>
+                      <option value="totalAmountDistributed" >Total Amount Distributed</option>
+                      <option value="totalAmountDecharged">Total Amount Decharged</option>
+                     
                     </select>
                   </div>
 
@@ -90,27 +91,13 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>Bizert</td>
-                    <td>45 536 180</td>
+                  <tr *ngFor="let agency of (topAgency$ | async)">
+                    
+                    <td>{{agency.braCorpName}}</td>
+                    <td>{{(agency.amount / 1000) | number:'1.0-0'}}</td>
 
                   </tr>
-                  <tr>
-                    <td>Bureau Jerba Mednin</td>
-                    <td>38 752 160</td>
-                  </tr>
-                  <tr>
-                    <td>Caisse Centrale</td>
-                    <td>34 354 123</td>
-                  </tr>
-                  <tr>
-                    <td>Fouchana</td>
-                    <td>32 456 785</td>
-                  </tr>
-                  <tr>
-                    <td>Jerba</td>
-                    <td>31 541 012</td>
-                  </tr>
+                  
                   </tbody>
                 </table>
               </div>

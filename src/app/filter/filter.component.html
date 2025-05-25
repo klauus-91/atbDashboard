@@ -11,7 +11,7 @@
     <div class="col-lg-6 pe-lg-2">
       <label >Month</label>
       <select class="form-select" (change)="selectMonth($event)">
-        <option value="0"> All</option>
+        <option value="00"> All</option>
         <option *ngFor="let month of allMonths" [value]="month">{{month}}</option>
 
       </select>
