@@ -139,7 +139,7 @@ export class DashboardComponent implements  OnInit, OnDestroy {
     }
   
     this.totalAmounts$ = this.api.getTotalAmountCharged(inputs);
-    this.totalAmounts$.subscribe(amount => {console.log('Total Amount Charged:', amount);});    
+       
   }
 
   topAgencyFilterChanged(event: any) {

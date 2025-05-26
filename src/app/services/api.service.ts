@@ -81,4 +81,11 @@ export class ApiService {
     return this.http.get(this.apiUrl + '/top5Agencies/?year=' + yearParam + '&month=' + monthParam + '&value=' + value);
 
   }
+
+  loginService(input: any): Observable<any> {
+    const {email, password} = input;
+    return this.http.post(this.apiUrl + '/login/', input).pipe(
+      map(response => response)
+    );
+  }
 }

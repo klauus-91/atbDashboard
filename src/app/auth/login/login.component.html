@@ -1,12 +1,5 @@
 <div class="container-fluid">
-  <script>
-    var isFluid = JSON.parse(localStorage.getItem('isFluid'));
-    if (isFluid) {
-      var container = document.querySelector('[data-layout]');
-      container.classList.remove('container');
-      container.classList.add('container-fluid');
-    }
-  </script>
+  
   <div class="row min-vh-100 bg-100">
     <div class="col-6 d-none d-lg-block position-relative">
       <div class="bg-holder" style="background-image:url(../../../assets/img/generic/I43-5003.png);background-position: 50% 50%;"></div><!--/.bg-holder-->
@@ -23,10 +16,10 @@
                 </div>
 
               </div>
-              <form>
-                <div class="mb-3"><label class="form-label" for="split-login-email">Email address</label><input class="form-control" id="split-login-email" type="email" /></div>
+              <form (ngSubmit)="login()">
+                <div class="mb-3"><label class="form-label" for="split-login-email">Email address</label><input name="email" class="form-control" [(ngModel)]="email" id="split-login-email" type="email" /></div>
                 <div class="mb-3">
-                  <div class="d-flex justify-content-between"><label class="form-label" for="split-login-password">Password</label></div><input class="form-control" id="split-login-password" type="password" />
+                  <div class="d-flex justify-content-between"><label class="form-label" for="split-login-password">Password</label></div><input name="password" [(ngModel)]="password" class="form-control" id="split-login-password" type="password" />
                 </div>
                 <div class="row flex-between-center">
                   <div class="col-auto">
@@ -34,12 +27,15 @@
                   </div>
                   <div class="col-auto"><a class="fs-10" href="forgot-password.html">Forgot Password?</a></div>
                 </div>
-                <div class="mb-3"><button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Log in</button></div>
+                <div class="mb-3"><button type="submit" class="btn btn-primary d-block w-100 mt-3"  >Log in</button></div>
               </form>
               <div class="position-relative mt-4">
                 <hr />
               </div>
-
+              <div class="alert alert-danger border-0 d-flex align-items-center" *ngIf="!success" role="alert">
+                <div class="bg-danger me-3 icon-item"><span class="fas fa-times-circle text-white fs-6"></span></div>
+                <p class="mb-0 flex-1">{{errorMessage}}</p><button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
             </div>
           </div>
         </div>
